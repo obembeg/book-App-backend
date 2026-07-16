@@ -19,10 +19,13 @@ model User {
   isAdmin Boolean @default(false)
   isAllowed Boolean @default(true)
   password String?
+  resetPasswordToken     String?
+  resetPasswordExpiresAt DateTime?
   provider String @default("local")
   createdAt DateTime @default(now())
   updatedAt DateTime? @updatedAt
   books     Book[]
+  notifications Notification[]
   profile   Profile?
 
   @@map("users")
@@ -70,3 +73,18 @@ model Book{
 
   @@map("books")
 } 
+
+model Notification {
+  id        String   @id @default(cuid())
+  title     String
+  message   String
+
+  isRead    Boolean  @default(false)
+
+  createdAt DateTime @default(now())
+
+  userId    Int
+  user      User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@map("notifications")
+}

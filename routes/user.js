@@ -10,6 +10,7 @@ const config = require("config");
 const authProtect = require("../middleware/auth");
 const adminProtect = require("../middleware/authAdmin");
 const { func } = require("joi");
+const { sendWelcomeEmail } = require("../services/mailService");
 
 router.post("/register", async (req, res, next) => {
   try {
@@ -51,6 +52,11 @@ router.post("/register", async (req, res, next) => {
           userId: newUser.id,
         },
       });
+      try {
+        await sendWelcomeEmail(newUser.email);
+      } catch (err) {
+        console.error("Welcome email failed:", err.message);
+      }
     }
 
     const payload = {
@@ -78,7 +84,7 @@ router.get(
   async (req, res, next) => {
     try {
       // if (!isAdmin) {
-      //   return res.status(404).json({ 
+      //   return res.status(404).json({
       //           message: "error"
       //          });
 
@@ -358,12 +364,10 @@ router.put(
           isAdmin: true,
         },
       });
-      return res
-        .status(200)
-        .json({
-          message: "User access updated successfully",
-          user: userAccess,
-        });
+      return res.status(200).json({
+        message: "User access updated successfully",
+        user: userAccess,
+      });
     } catch (error) {
       next(error);
     }

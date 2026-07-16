@@ -320,6 +320,32 @@ router.delete("/delete", authProtect, async (req, res, next) => {
   }
 });
 
+router.get("/fetchevery", authProtect, async (req, res, next) => {
+  try {
+    // const { sub } = req.user;
+    const book = await prisma.book.findMany({
+     
+      select: {
+        title: true,
+        id: true,
+        description: true,
+        price: true,
+        author: true,
+        category: {
+          select: {
+            id: true,
+            name: true,
+          },
+        },
+      },
+    });
+    return res
+      .status(200)
+      .json({ message: "All existing books fetched successfully", books: book });
+  } catch (error) {
+    next(error);
+  }
+});
 router.get("/fetchall", authProtect, async (req, res, next) => {
   try {
     const { sub } = req.user;
@@ -348,6 +374,7 @@ router.get("/fetchall", authProtect, async (req, res, next) => {
     next(error);
   }
 });
+
 router.get(
   "/fetchallAdmin",
   [authProtect, adminProtect],

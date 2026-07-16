@@ -12,6 +12,8 @@ const { OAuth2Client } = require("google-auth-library");
 
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
+const { sendWelcomeEmail } = require("../services/mailService");
+
 router.post("/login", async (req, res, next) => {
   try {
     const valResult = userSchema.userVal.validate(req.body, {
@@ -77,7 +79,7 @@ router.post("/google", async (req, res, next) => {
     });
 
     if (!user) {
-       user = await prisma.user.create({
+      user = await prisma.user.create({
         data: {
           email,
           provider: "google",
@@ -89,6 +91,12 @@ router.post("/google", async (req, res, next) => {
           userId: user.id,
         },
       });
+
+      try {
+        await sendWelcomeEmail(user.email);
+      } catch (err) {
+        console.error("Welcome email failed:", err.message);
+      }
     }
 
     const payload = {
