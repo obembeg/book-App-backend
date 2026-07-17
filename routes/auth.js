@@ -34,8 +34,17 @@ router.post("/login", async (req, res, next) => {
     const user = await prisma.user.findUnique({
       where: { email },
     });
+
+    
     if (!user) {
       return res.status(404).json({ message: "Auth error" });
+    }
+    
+    if (user.password === null) {
+      return res.status(200).json({
+        message:
+          "This account is registered via Google. Please use Google login to access your account.",
+      });
     }
     const isPasswordValid = await argon.verify(user.password, password);
     if (!isPasswordValid) {
