@@ -21,6 +21,9 @@ router.post("/create", [authProtect, adminProtect], async (req, res, next) => {
         name,
         description,
       },
+      orderBy: {
+        id: "desc",
+      },
       select: {
         name: true,
         id: true,
@@ -49,6 +52,9 @@ router.put("/update", [authProtect, adminProtect], async (req, res, next) => {
     const updatedCategory = await prisma.category.update({
       where: {
         id: Number(categoryId),
+      },
+      orderBy: {
+        id: "desc",
       },
       data: {
         name,

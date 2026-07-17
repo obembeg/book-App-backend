@@ -34,6 +34,9 @@ router.post("/create", authProtect, async (req, res, next) => {
         author,
         categoryId: Number(categoryId),
       },
+      orderBy: {
+        id: "desc",
+      },
       select: {
         title: true,
         id: true,
@@ -71,6 +74,11 @@ router.post(
           author,
           categoryId: Number(categoryId),
         },
+
+        orderBy: {
+          id: "desc",
+        },
+
         select: {
           title: true,
           id: true,

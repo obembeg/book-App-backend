@@ -45,11 +45,18 @@ router.post("/register", async (req, res, next) => {
         email,
         password: hashedPassword,
       },
+      orderBy: {
+        id: "desc",
+      },
     });
     if (newUser) {
       await prisma.profile.create({
         data: {
           userId: newUser.id,
+        },
+
+        orderBy: {
+          id: "desc",
         },
       });
       try {
@@ -322,7 +329,9 @@ router.put(
       const updatedUser = await prisma.user.update({
         where: { id: Number(sub) },
         data: { email, password: hashedPassword, isAdmin: isAdmin },
-
+        orderBy: {
+          id: "desc",
+        },
         select: {
           email: true,
         },
@@ -357,6 +366,9 @@ router.put(
       const userAccess = await prisma.user.update({
         where: { id: Number(id) },
         data: { isAllowed, isAdmin },
+        orderBy: {
+          id: "desc",
+        },
 
         select: {
           email: true,
