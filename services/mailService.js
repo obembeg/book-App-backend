@@ -2,12 +2,15 @@ const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  port: 465,
+  secure: true,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
+
+  logger: true,
+  debug: true,
 });
 
 transporter.verify((error) => {
@@ -22,7 +25,7 @@ transporter.verify((error) => {
 const sendEmail = async ({ to, subject, html }) => {
   try {
     await transporter.sendMail({
-      from: `"Book App 📚" <${process.env.EMAIL_USER}>`,
+      from: `"OG Book Store 📚" <${process.env.EMAIL_USER}>`,
       to,
       subject,
       html,
@@ -38,18 +41,18 @@ const sendEmail = async ({ to, subject, html }) => {
 const sendWelcomeEmail = async (email) => {
   await sendEmail({
     to: email,
-    subject: "📚 Welcome to Book App!",
+    subject: "📚 Welcome to OG Book Store!",
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border:1px solid #ddd; border-radius:10px; overflow:hidden;">
         
         <div style="background:#2563eb; color:white; padding:20px; text-align:center;">
-          <h1>📚 Book App</h1>
+          <h1>📚 OG Book Store</h1>
         </div>
 
         <div style="padding:30px;">
           <h2>Welcome!</h2>
 
-          <p>Thank you for joining <strong>Book App</strong>.</p>
+          <p>Thank you for joining <strong>OG Book Store</strong>.</p>
 
           <p>Your account has been created successfully.</p>
 
@@ -71,7 +74,7 @@ const sendWelcomeEmail = async (email) => {
           <hr>
 
           <small>
-          © 2026 Book App. All rights reserved.
+          © 2026 OG Book Store. All rights reserved.
           </small>
 
         </div>
