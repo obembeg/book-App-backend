@@ -3,18 +3,19 @@ const express = require("express");
 const http = require("http");
 const { initializeSocket } = require("./socket");
 
-
 const app = express();
 const server = http.createServer(app);
-
-
 
 initializeSocket(server);
 
 const config = require("config");
-const port = config.get("Port") || 1632;
+const port = process.env.PORT || config.get("Port");
 
-app.use(cors());
+app.use(cors({
+  origin: process.env.FRONTEND_URL || "http://localhost:5173",
+  methods: ["GET", "POST", "PATCH","PUT", "DELETE"],
+  credentials: true,
+}));
 //Body Parser Middleware
 app.use(express.json());
 

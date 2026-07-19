@@ -1,5 +1,5 @@
 {
   "Appname": "Book Store App - prod",
-  "ServerURL": "http://localhost:1528",
+  "ServerURL": "https://book-app-backend-0hv3.onrender.com",
   "Port": 1528
 }
