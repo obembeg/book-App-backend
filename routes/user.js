@@ -10,7 +10,7 @@ const config = require("config");
 const authProtect = require("../middleware/auth");
 const adminProtect = require("../middleware/authAdmin");
 const { func } = require("joi");
-const { sendWelcomeEmail } = require("../services/mailService");
+// const { sendWelcomeEmail } = require("../services/mailService");
 
 router.post("/register", async (req, res, next) => {
   try {
@@ -50,11 +50,11 @@ router.post("/register", async (req, res, next) => {
       },
     });
 
-    try {
-      await sendWelcomeEmail(newUser.email);
-    } catch (err) {
-      console.error("Welcome email failed:", err.message);
-    }
+    // try {
+    //   await sendWelcomeEmail(newUser.email);
+    // } catch (err) {
+    //   console.error("Welcome email failed:", err.message);
+    // }
 
     const payload = {
       sub: newUser.id,

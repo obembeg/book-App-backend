@@ -101,11 +101,11 @@ router.post("/google", async (req, res, next) => {
         },
       });
 
-      try {
-        await sendWelcomeEmail(user.email);
-      } catch (err) {
-        console.error("Welcome email failed:", err.message);
-      }
+      // try {
+      //   await sendWelcomeEmail(user.email);
+      // } catch (err) {
+      //   console.error("Welcome email failed:", err.message);
+      // }
     }
 
     const payload = {

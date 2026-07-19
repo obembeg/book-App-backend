@@ -5,7 +5,7 @@ const prisma = require("../helper/prisma");
 const authProtect = require("../middleware/auth");
 const adminProtect = require("../middleware/authAdmin");
 
-const { sendRestrictionEmail } = require("../services/mailService");
+// const { sendRestrictionEmail } = require("../services/mailService");
 const { createNotification } = require("../services/notificationService");
 
 const { getIO } = require("../socket");
@@ -72,11 +72,11 @@ router.post(
         message: "You have been restricted from creating books.",
       });
       console.log("✅ Notification emitted");
-      try {
-        await sendRestrictionEmail(user.email);
-      } catch (err) {
-        console.error("Restriction email failed:", err.message);
-      }
+      // try {
+      //   await sendRestrictionEmail(user.email);
+      // } catch (err) {
+      //   console.error("Restriction email failed:", err.message);
+      // }
 
       return res.json({
         message: "Notification created and email sent successfully",
