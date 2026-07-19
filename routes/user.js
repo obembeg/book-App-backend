@@ -28,7 +28,6 @@ router.post("/register", async (req, res, next) => {
       return res.status(400).send(pwdResult.error.details);
     }
     const { email, password } = req.body;
-    const hashedPassword = await argon.hash(password);
 
     const existingUser = await prisma.user.findUnique({
       where: { email },
@@ -39,31 +38,22 @@ router.post("/register", async (req, res, next) => {
         message: "User already exists",
       });
     }
+    const hashedPassword = await argon.hash(password);
 
     const newUser = await prisma.user.create({
       data: {
         email,
         password: hashedPassword,
-      },
-      orderBy: {
-        id: "desc",
+        profile: {
+          create: {},
+        },
       },
     });
-    if (newUser) {
-      await prisma.profile.create({
-        data: {
-          userId: newUser.id,
-        },
 
-        orderBy: {
-          id: "desc",
-        },
-      });
-      try {
-        await sendWelcomeEmail(newUser.email);
-      } catch (err) {
-        console.error("Welcome email failed:", err.message);
-      }
+    try {
+      await sendWelcomeEmail(newUser.email);
+    } catch (err) {
+      console.error("Welcome email failed:", err.message);
     }
 
     const payload = {
@@ -74,7 +64,7 @@ router.post("/register", async (req, res, next) => {
     };
     const jwtOption = { expiresIn: 360000 };
 
-    const token = await jwt.sign(payload, process.env.JWT_SECRET, jwtOption);
+    const token =  jwt.sign(payload, process.env.JWT_SECRET, jwtOption);
 
     return res.status(201).json({
       message: "User created successfully",
@@ -90,13 +80,11 @@ router.get(
   [authProtect, adminProtect],
   async (req, res, next) => {
     try {
-      // if (!isAdmin) {
-      //   return res.status(404).json({
-      //           message: "error"
-      //          });
-
-      // }
+     
       const users = await prisma.user.findMany({
+        orderBy: {
+          id: "desc",
+        },
         select: {
           email: true,
           id: true,
@@ -109,6 +97,9 @@ router.get(
             },
           },
           books: {
+            orderBy: {
+              id: "desc",
+            },
             select: {
               title: true,
               id: true,
@@ -329,9 +320,7 @@ router.put(
       const updatedUser = await prisma.user.update({
         where: { id: Number(sub) },
         data: { email, password: hashedPassword, isAdmin: isAdmin },
-        orderBy: {
-          id: "desc",
-        },
+        
         select: {
           email: true,
         },
@@ -366,10 +355,7 @@ router.put(
       const userAccess = await prisma.user.update({
         where: { id: Number(id) },
         data: { isAllowed, isAdmin },
-        orderBy: {
-          id: "desc",
-        },
-
+       
         select: {
           email: true,
           isAllowed: true,

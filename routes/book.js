@@ -34,9 +34,7 @@ router.post("/create", authProtect, async (req, res, next) => {
         author,
         categoryId: Number(categoryId),
       },
-      orderBy: {
-        id: "desc",
-      },
+      
       select: {
         title: true,
         id: true,
@@ -75,9 +73,7 @@ router.post(
           categoryId: Number(categoryId),
         },
 
-        orderBy: {
-          id: "desc",
-        },
+        
 
         select: {
           title: true,
@@ -332,7 +328,9 @@ router.get("/fetchevery", authProtect, async (req, res, next) => {
   try {
     // const { sub } = req.user;
     const book = await prisma.book.findMany({
-     
+      orderBy: {
+        id: "desc",
+      },
       select: {
         title: true,
         id: true,
@@ -360,6 +358,9 @@ router.get("/fetchall", authProtect, async (req, res, next) => {
     const book = await prisma.book.findMany({
       where: {
         userId: Number(sub),
+      },
+      orderBy: {
+        id: "desc",
       },
       select: {
         title: true,
@@ -389,6 +390,9 @@ router.get(
   async (req, res, next) => {
     try {
       const book = await prisma.book.findMany({
+        orderBy: {
+          id: "desc",
+        },
         select: {
           title: true,
           id: true,
